@@ -1,19 +1,23 @@
 "use client"
-import { useEffect } from "react"
+import { useEffect, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { api, saveToken } from "@/lib/api"
 
-export default function LoginPage() {
+// 1. We move the logic that uses useSearchParams() into its own component
+function LoginHandler() {
   const router = useRouter()
   const params = useSearchParams()
 
   useEffect(() => {
     const code = params.get("code")
     if (!code) return
-    api.auth.googleCallback(code).then(({ access_token }) => {
-      saveToken(access_token)
-      router.push("/home")
-    }).catch(() => router.push("/?error=auth"))
+    
+    api.auth.googleCallback(code)
+      .then(({ access_token }) => {
+        saveToken(access_token)
+        router.push("/home")
+      })
+      .catch(() => router.push("/?error=auth"))
   }, [params, router])
 
   return (
@@ -24,5 +28,20 @@ export default function LoginPage() {
       </div>
       <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
     </div>
+  )
+}
+
+// 2. We wrap that component in <Suspense> inside the main default export
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div style={{ background: "#0B0B0D", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ textAlign: "center" }}>
+          <p style={{ color: "#6B6B80", fontSize: 14 }}>Preparing...</p>
+        </div>
+      </div>
+    }>
+      <LoginHandler />
+    </Suspense>
   )
 }
