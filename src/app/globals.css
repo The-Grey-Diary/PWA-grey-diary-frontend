@@ -1,45 +1,15 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 @import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&display=swap");
-
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  background: #0B0B0D;
-  color: #F5F5F5;
-  font-family: "Inter", system-ui, sans-serif;
-  -webkit-font-smoothing: antialiased;
-}
-
-.serif { font-family: "Instrument Serif", Georgia, serif; }
-
-::-webkit-scrollbar { width: 3px; }
-::-webkit-scrollbar-track { background: #0B0B0D; }
-::-webkit-scrollbar-thumb { background: rgba(139,124,255,.3); }
-
-@keyframes glow-seal {
-  0%,100% { box-shadow: 0 0 15px rgba(139,124,255,.15); }
-  50%      { box-shadow: 0 0 30px rgba(139,124,255,.35); }
-}
-@keyframes glow-gold {
-  0%,100% { box-shadow: 0 0 15px rgba(196,168,74,.18); }
-  50%      { box-shadow: 0 0 30px rgba(196,168,74,.4); }
-}
-@keyframes float {
-  0%,100% { transform: translateY(0); }
-  50%     { transform: translateY(-6px); }
-}
-@keyframes fadeup {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes pulse {
-  0%,100% { opacity: .45; }
-  50%      { opacity: 1; }
-}
-@keyframes cursor-blink {
-  0%,100% { opacity: 1; }
-  50%      { opacity: 0; }
-}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:#0B0B0D;color:#F5F5F5;font-family:"Inter",system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.serif{font-family:"Instrument Serif",Georgia,serif}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:#0B0B0D}::-webkit-scrollbar-thumb{background:rgba(139,124,255,.35);border-radius:2px}
+@keyframes gs{0%,100%{box-shadow:0 0 18px rgba(139,124,255,.15),0 0 0 1px rgba(139,124,255,.12)}50%{box-shadow:0 0 36px rgba(139,124,255,.35),0 0 0 1px rgba(139,124,255,.25)}}
+@keyframes gg{0%,100%{box-shadow:0 0 18px rgba(196,168,74,.15),0 0 0 1px rgba(196,168,74,.12)}50%{box-shadow:0 0 36px rgba(196,168,74,.38),0 0 0 1px rgba(196,168,74,.28)}}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes fadeup{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
+@keyframes orbit-a{from{transform:rotate(0deg) translateX(var(--r)) rotate(0deg)}to{transform:rotate(360deg) translateX(var(--r)) rotate(-360deg)}}

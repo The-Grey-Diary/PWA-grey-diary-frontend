@@ -1,220 +1,29 @@
-"use client"
-import { useEffect, useState } from "react"
-import Link from "next/link"
+import GuardianHero from "@/components/ui/GuardianHero"
+import CapsuleVaultSection from "@/components/ui/CapsuleVaultSection"
+import { PHOTO_DATA_URI } from "@/lib/photo"
 
-const MOOD_PILLS = [
-  { label: "Fear", color: "#FF6B78" },
-  { label: "Hope", color: "#52C4A0" },
-  { label: "Love", color: "#FF7BAC" },
-  { label: "Regret", color: "#9B88C4" },
-  { label: "Unknown", color: "#6FB8E0" },
+const MOOD_C: Record<string, string> = { Fear: "#FF6B78", Hope: "#52C4A0", Love: "#FF7BAC", Regret: "#9B88C4", Unknown: "#6FB8E0" }
+
+const STEPS: [string, string, string][] = [
+  ["✍️", "Write", "During uncertainty. Before you know the ending."],
+  ["🔒", "Seal", "Choose when it unlocks. The Observer leaves one reflection."],
+  ["⏳", "Wait", "The capsule counts down. Time becomes the third character."],
+  ["🌅", "Return", "The seal breaks. The community bears witness."],
+  ["🌊", "Echo", "You add what happened. The story becomes whole."],
 ]
 
-const SAMPLE_CAPSULES = [
-  { title: "The letter I couldn't send", mood: "Regret", days: "127d", status: "sealed" },
-  { title: "Before the interview", mood: "Fear", days: "Revealed", status: "revealed" },
-  { title: "The dream I almost gave up", mood: "Hope", days: "44d", status: "sealed" },
-  { title: "If this is the last time", mood: "Love", days: "12d", status: "sealed" },
+const SAMPLE = [
+  { t: "The letter I couldn't send", m: "Regret", c: "Love", d: "127d", r: false },
+  { t: "Before the interview", m: "Fear", c: "Career", d: "Revealed", r: true },
+  { t: "The dream I almost gave up", m: "Hope", c: "Dreams", d: "44d", r: false },
+  { t: "Starting over at 34", m: "Hope", c: "Life Change", d: "Revealed", r: true },
 ]
 
-const MOOD_COLORS: Record<string, string> = {
-  Fear: "#FF6B78", Hope: "#52C4A0", Love: "#FF7BAC", Regret: "#9B88C4", Unknown: "#6FB8E0"
-}
-
-export default function LandingPage() {
-  const [guardianText, setGuardianText] = useState("")
-  const [guardianLoading, setGuardianLoading] = useState(true)
-  const [typingIndex, setTypingIndex] = useState(0)
-  const [stats, setStats] = useState({ sealed: 0, revealed: 0, users: 0 })
-
-  const FALLBACK = "This week, 417 stories were entrusted to time.\n\n63 returned with answers.\n\nMost fears never arrived as imagined.\n\nThe Grey Diary holds what you cannot carry alone."
-
-  // Fetch Guardian + stats
-  useEffect(() => {
-    const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
-
-    Promise.all([
-      fetch(`${API}/guardian/weekly`).then(r => r.ok ? r.json() : null).catch(() => null),
-      fetch(`${API}/capsules/stats`).then(r => r.ok ? r.json() : null).catch(() => null),
-    ]).then(([guardian, s]) => {
-      const text = guardian?.content || FALLBACK
-      setGuardianLoading(false)
-      // Animate stats
-      if (s) {
-        const target = { sealed: s.total_sealed || 0, revealed: s.total_revealed || 0, users: s.total_users || 0 }
-        let frame = 0
-        const interval = setInterval(() => {
-          frame++
-          const pct = Math.min(frame / 60, 1)
-          setStats({
-            sealed:   Math.floor(pct * target.sealed),
-            revealed: Math.floor(pct * target.revealed),
-            users:    Math.floor(pct * target.users),
-          })
-          if (pct >= 1) clearInterval(interval)
-        }, 25)
-      }
-      // Typewriter for Guardian
-      let i = 0
-      const iv = setInterval(() => {
-        if (i < text.length) { setGuardianText(text.slice(0, ++i)); i++ }
-        else clearInterval(iv)
-      }, 15)
-    })
-  }, [])
-
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
-
-  return (
-    <div style={{ background: "#0B0B0D", minHeight: "100vh", color: "#F5F5F5", fontFamily: "Inter, system-ui, sans-serif" }}>
-
-      {/* NAV */}
-      <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, background: "rgba(11,11,13,.85)", backdropFilter: "blur(20px)", borderBottom: "1px solid rgba(139,124,255,.07)", height: 56, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 28px" }}>
-        <div style={{ fontFamily: "Instrument Serif, Georgia, serif", fontSize: 16, fontStyle: "italic" }}>The Grey Diary</div>
-        <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
-          <a href="#explore" style={{ color: "#7B7B8F", fontSize: 13, textDecoration: "none" }}>Explore</a>
-          <a href={`${API_URL}/auth/google`} style={{ background: "#fff", border: "none", borderRadius: 8, padding: "8px 18px", color: "#111", fontSize: 13, fontWeight: 500, cursor: "pointer", textDecoration: "none", display: "flex", alignItems: "center", gap: 8 }}>
-            <GoogleIcon />
-            Continue with Google
-          </a>
-        </div>
-      </nav>
-
-      {/* HERO */}
-      <section style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "80px 24px 60px", position: "relative" }}>
-        <StarField />
-
-        <div style={{ position: "relative", zIndex: 1, maxWidth: 680, animation: "fadeup .8s ease forwards" }}>
-          {/* Eyebrow */}
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 7, background: "rgba(139,124,255,.08)", border: "1px solid rgba(139,124,255,.2)", borderRadius: 20, padding: "5px 14px", marginBottom: 28 }}>
-            <div style={{ width: 6, height: 6, background: "#52C4A0", borderRadius: "50%", animation: "pulse 2s ease-in-out infinite" }} />
-            <span style={{ fontSize: 10, color: "#8B7CFF", fontWeight: 500, letterSpacing: ".12em", textTransform: "uppercase" }}>Social Reflection Platform</span>
-          </div>
-
-          <h1 style={{ fontFamily: "Instrument Serif, serif", fontSize: "clamp(40px, 7vw, 68px)", lineHeight: 1.1, fontWeight: 400, letterSpacing: "-.03em", marginBottom: 20 }}>
-            Write before you know<br />
-            <em style={{ background: "linear-gradient(135deg,#A89BFF,#D4CCFF,#8B7CFF)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-              what happens next.
-            </em>
-          </h1>
-
-          <p style={{ fontSize: 16, color: "#7B7B8F", lineHeight: 1.65, maxWidth: 440, margin: "0 auto 44px" }}>
-            Seal your story. Let time pass. Return to discover what became of your fears, your hopes, your questions.
-          </p>
-
-          {/* Guardian Card */}
-          <div style={{ background: "#141417", border: "1px solid rgba(139,124,255,.22)", borderRadius: 14, padding: "22px 26px", maxWidth: 520, margin: "0 auto 44px", textAlign: "left", animation: "glow-seal 4s ease-in-out infinite" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 14 }}>
-              <div style={{ width: 30, height: 30, borderRadius: "50%", background: "radial-gradient(circle,#8B7CFF,#5A4FCC)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13 }}>🔮</div>
-              <div>
-                <div style={{ fontSize: 10, color: "#8B7CFF", fontWeight: 600, letterSpacing: ".1em", textTransform: "uppercase" }}>Grey Guardian</div>
-                <div style={{ fontSize: 10, color: "#6B6B80" }}>Weekly Chronicle</div>
-              </div>
-              <div style={{ marginLeft: "auto", width: 7, height: 7, background: "#52C4A0", borderRadius: "50%", animation: "pulse 2s ease-in-out infinite" }} />
-            </div>
-            {guardianLoading ? (
-              <div style={{ display: "flex", gap: 5, padding: "8px 0" }}>
-                {[0, .2, .4].map(d => <div key={d} style={{ width: 5, height: 5, background: "#8B7CFF", borderRadius: "50%", animation: `pulse .8s ${d}s ease-in-out infinite` }} />)}
-              </div>
-            ) : (
-              <div style={{ fontFamily: "Instrument Serif, serif", fontSize: 15, fontStyle: "italic", color: "#D0D0E0", lineHeight: 1.72 }}>
-                {guardianText}
-                <span style={{ animation: "cursor-blink 1s infinite", color: "#8B7CFF" }}>|</span>
-              </div>
-            )}
-          </div>
-
-          {/* Stats */}
-          <div style={{ display: "flex", gap: 36, justifyContent: "center", marginBottom: 44, flexWrap: "wrap" }}>
-            {[["Sealed", stats.sealed], ["Revealed", stats.revealed], ["Writers", stats.users]].map(([l, v]) => (
-              <div key={l as string} style={{ textAlign: "center" }}>
-                <div style={{ fontFamily: "Instrument Serif, serif", fontSize: 28, fontWeight: 400, letterSpacing: "-.03em" }}>{(v as number).toLocaleString()}</div>
-                <div style={{ fontSize: 10, color: "#6B6B80", marginTop: 3, letterSpacing: ".06em", textTransform: "uppercase" }}>{l}</div>
-              </div>
-            ))}
-          </div>
-
-          {/* CTA */}
-          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-            <a href={`${API_URL}/auth/google`} style={{ display: "flex", alignItems: "center", gap: 10, background: "#fff", border: "none", borderRadius: 10, padding: "12px 24px", color: "#111", fontSize: 14, fontWeight: 500, textDecoration: "none" }}>
-              <GoogleIcon />
-              Seal Your First Story
-            </a>
-            <Link href="/explore" style={{ background: "transparent", border: "1px solid rgba(139,124,255,.3)", borderRadius: 10, padding: "12px 20px", color: "#8B7CFF", fontSize: 14, fontWeight: 500, textDecoration: "none" }}>
-              Explore Stories →
-            </Link>
-          </div>
-        </div>
-
-        <div style={{ position: "absolute", bottom: 28, left: "50%", transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: 6, color: "#6B6B80", fontSize: 10, letterSpacing: ".1em", textTransform: "uppercase", animation: "float 2.5s ease-in-out infinite" }}>
-          <div style={{ width: 1, height: 36, background: "linear-gradient(to bottom, transparent, rgba(139,124,255,.4))" }} />
-          Scroll
-        </div>
-      </section>
-
-      {/* CAPSULE PREVIEW */}
-      <section id="explore" style={{ padding: "80px 24px", background: "#0D0D10", borderTop: "1px solid rgba(139,124,255,.06)" }}>
-        <div style={{ maxWidth: 800, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 48 }}>
-            <div style={{ fontFamily: "Instrument Serif, serif", fontSize: "clamp(26px,4vw,40px)", fontWeight: 400, letterSpacing: "-.02em", marginBottom: 12 }}>Stories sealed right now.</div>
-            <p style={{ fontSize: 14, color: "#7B7B8F" }}>Real uncertainty. Real people. Real time.</p>
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>
-            {SAMPLE_CAPSULES.map((c, i) => (
-              <div key={i} style={{ background: "#141417", border: `1px solid ${c.status === "revealed" ? "rgba(196,168,74,.28)" : "rgba(139,124,255,.2)"}`, borderRadius: 14, padding: "20px", animation: c.status === "revealed" ? "glow-gold 4s ease-in-out infinite" : "glow-seal 4s ease-in-out infinite" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
-                  <span style={{ fontSize: 10, color: MOOD_COLORS[c.mood], fontWeight: 600, letterSpacing: ".08em", textTransform: "uppercase" }}>{c.mood}</span>
-                  <span style={{ fontSize: 9, color: c.status === "revealed" ? "#C4A84A" : "#8B7CFF", background: c.status === "revealed" ? "rgba(196,168,74,.1)" : "rgba(139,124,255,.1)", border: `1px solid ${c.status === "revealed" ? "rgba(196,168,74,.2)" : "rgba(139,124,255,.2)"}`, borderRadius: 20, padding: "2px 8px", fontWeight: 600 }}>{c.days}</span>
-                </div>
-                <div style={{ fontFamily: "Instrument Serif, serif", fontSize: 15, fontStyle: "italic", color: "#E8E8F0", lineHeight: 1.45 }}>"{c.title}"</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* HOW IT WORKS */}
-      <section style={{ padding: "80px 24px", maxWidth: 700, margin: "0 auto", textAlign: "center" }}>
-        <div style={{ fontFamily: "Instrument Serif, serif", fontSize: "clamp(26px,4vw,40px)", fontWeight: 400, letterSpacing: "-.02em", marginBottom: 48 }}>Five moments.<br /><em style={{ color: "#8B7CFF" }}>One story.</em></div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
-          {[
-            ["✍️", "Write", "During uncertainty. Before you know the ending."],
-            ["🔒", "Seal", "Choose when it unlocks. The Observer leaves one reflection."],
-            ["⏳", "Wait", "The capsule counts down. You live your life."],
-            ["🌅", "Return", "The seal breaks. The community bears witness."],
-            ["🌊", "Echo", "Add what happened. The story becomes whole."],
-          ].map(([icon, title, desc]) => (
-            <div key={title as string} style={{ display: "flex", alignItems: "flex-start", gap: 16, textAlign: "left" }}>
-              <div style={{ width: 44, height: 44, background: "#141417", border: "1px solid rgba(139,124,255,.2)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, flexShrink: 0 }}>{icon}</div>
-              <div>
-                <div style={{ fontFamily: "Instrument Serif, serif", fontSize: 19, marginBottom: 4 }}>{title}</div>
-                <div style={{ fontSize: 13, color: "#7B7B8F", lineHeight: 1.6 }}>{desc}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* CTA FOOTER */}
-      <section style={{ padding: "80px 24px 100px", background: "#0D0D10", borderTop: "1px solid rgba(139,124,255,.06)", textAlign: "center" }}>
-        <div style={{ fontFamily: "Instrument Serif, serif", fontSize: "clamp(28px,4vw,48px)", fontWeight: 400, letterSpacing: "-.03em", marginBottom: 20 }}>
-          "I wrote this<br /><em>before</em> I knew<br />what would happen."
-        </div>
-        <p style={{ fontSize: 14, color: "#7B7B8F", marginBottom: 40 }}>Seal your moment. The community holds it with you.</p>
-        <a href={`${API_URL}/auth/google`} style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "#fff", borderRadius: 10, padding: "13px 28px", color: "#111", fontSize: 14, fontWeight: 500, textDecoration: "none" }}>
-          <GoogleIcon />
-          Begin Writing
-        </a>
-      </section>
-
-      <footer style={{ padding: "24px", borderTop: "1px solid rgba(139,124,255,.06)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
-        <div style={{ fontFamily: "Instrument Serif, serif", fontSize: 15, fontStyle: "italic" }}>The Grey Diary</div>
-        <div style={{ fontSize: 11, color: "#6B6B80" }}>thegreydiary.online · Where stories wait for their endings</div>
-        <div style={{ fontSize: 11, color: "#6B6B80" }}>Built by Shiladitya Mallick</div>
-      </footer>
-    </div>
-  )
-}
+const PLANS = [
+  { n: "Free", p: "₹0", per: "", d: "Begin your practice", f: ["3 active capsules", "Explore stories", "Court access", "Echoes"], hl: false, gd: false },
+  { n: "Grey Plus", p: "₹149", per: "/mo", d: "For the dedicated writer", f: ["25 active capsules", "Guardian archive", "Emotional themes", "Early reveals"], hl: true, gd: false },
+  { n: "Grey Premium", p: "₹399", per: "/mo", d: "For those who go deep", f: ["Unlimited capsules", "Private vault", "Future letters", "Personal Guardian"], hl: false, gd: true },
+]
 
 function GoogleIcon() {
   return (
@@ -227,19 +36,252 @@ function GoogleIcon() {
   )
 }
 
-function StarField() {
-  const stars = Array.from({ length: 70 }, (_, i) => ({
-    x: (i * 137.5) % 100,
-    y: (i * 97.3) % 100,
-    s: (i % 3) * 0.5 + 0.5,
-    d: (i % 5) * 0.8 + 1.5,
-    del: (i % 7) * 0.4,
-  }))
+export default function LandingPage() {
+  const API = process.env.NEXT_PUBLIC_API_URL || "https://orb-grey-diary-backend-632388399077.us-central1.run.app"
+  const googleUrl = API + "/auth/google"
+
   return (
-    <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
-      {stars.map((s, i) => (
-        <div key={i} style={{ position: "absolute", left: `${s.x}%`, top: `${s.y}%`, width: s.s, height: s.s, background: "#F5F5F5", borderRadius: "50%", animation: `pulse ${s.d}s ${s.del}s ease-in-out infinite`, opacity: 0.3 }} />
-      ))}
+    <div style={{ background: "#0B0B0D", color: "#F5F5F5", fontFamily: "Inter,system-ui,sans-serif" }}>
+
+      <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 200, background: "rgba(11,11,13,.9)", backdropFilter: "blur(24px)", borderBottom: "1px solid rgba(139,124,255,.08)", height: 58, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 28px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ width: 30, height: 30, background: "linear-gradient(135deg,#8B7CFF,#5A4FCC)", borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>📔</div>
+          <span style={{ fontFamily: "Instrument Serif,serif", fontSize: 16, fontStyle: "italic" }}>The Grey Diary</span>
+        </div>
+        <div style={{ display: "flex", gap: 20, alignItems: "center" }}>
+          <a href="#vault" style={{ color: "#7B7B8F", fontSize: 13, textDecoration: "none" }}>Vault</a>
+          <a href="#founder" style={{ color: "#7B7B8F", fontSize: 13, textDecoration: "none" }}>Story</a>
+          <a href="#plans" style={{ color: "#7B7B8F", fontSize: 13, textDecoration: "none" }}>Plans</a>
+          <a href={googleUrl} style={{ display: "flex", alignItems: "center", gap: 8, background: "#fff", borderRadius: 8, padding: "8px 18px", color: "#111", fontSize: 13, fontWeight: 500, textDecoration: "none" }}>
+            <GoogleIcon />
+            Begin Writing
+          </a>
+        </div>
+      </nav>
+
+      <GuardianHero apiUrl={API} />
+
+      <section id="vault" style={{ padding: "72px 24px", background: "#0C0C0F", borderTop: "1px solid rgba(139,124,255,.06)" }}>
+        <div style={{ textAlign: "center", marginBottom: 20 }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+            <div style={{ height: 1, width: 36, background: "rgba(196,168,74,.4)" }} />
+            <span style={{ fontSize: 10, color: "#C4A84A", letterSpacing: ".14em", textTransform: "uppercase" }}>Live Vault</span>
+            <div style={{ height: 1, width: 36, background: "rgba(196,168,74,.4)" }} />
+          </div>
+          <h2 className="serif" style={{ fontSize: "clamp(26px,4vw,40px)", fontWeight: 400, letterSpacing: "-.02em", marginBottom: 10 }}>Every story waits in the dark.</h2>
+          <p style={{ fontSize: 14, color: "#7B7B8F", maxWidth: 400, margin: "0 auto" }}>Some 3 days away. Some 201 days away. All of them are true.</p>
+        </div>
+        <CapsuleVaultSection />
+        <p className="serif" style={{ textAlign: "center", fontSize: 17, color: "#7B7B8F", fontStyle: "italic", marginTop: 16 }}>"Every story waits for its ending."</p>
+      </section>
+
+      <section style={{ padding: "72px 24px", maxWidth: 860, margin: "0 auto" }}>
+        <h2 className="serif" style={{ fontSize: "clamp(24px,3.5vw,38px)", fontWeight: 400, letterSpacing: "-.02em", textAlign: "center", marginBottom: 40 }}>Stories sealed right now.</h2>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))", gap: 16 }}>
+          {SAMPLE.map((c, i) => (
+            <div key={i} style={{ background: "#141417", border: "1px solid " + (c.r ? "rgba(196,168,74,.28)" : "rgba(139,124,255,.2)"), borderRadius: 14, padding: 22, animation: (c.r ? "gg" : "gs") + " 4s ease-in-out infinite" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
+                <span style={{ fontSize: 10, fontWeight: 600, color: MOOD_C[c.m] || "#8B7CFF", letterSpacing: ".08em", textTransform: "uppercase" }}>{c.m}</span>
+                <span style={{ fontSize: 9, color: c.r ? "#C4A84A" : "#8B7CFF", background: c.r ? "rgba(196,168,74,.1)" : "rgba(139,124,255,.1)", border: "1px solid " + (c.r ? "rgba(196,168,74,.2)" : "rgba(139,124,255,.2)"), borderRadius: 20, padding: "2px 9px", fontWeight: 600 }}>{c.d}</span>
+              </div>
+              <div className="serif" style={{ fontSize: 16, fontStyle: "italic", color: "#E8E8F0", lineHeight: 1.45 }}>"{c.t}"</div>
+              <div style={{ fontSize: 10, color: "#6B6B80", marginTop: 8 }}>{c.c}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section style={{ padding: "72px 24px", background: "#0C0C0F", borderTop: "1px solid rgba(139,124,255,.06)" }}>
+        <div style={{ maxWidth: 720, margin: "0 auto" }}>
+          <h2 className="serif" style={{ fontSize: "clamp(24px,3.5vw,40px)", fontWeight: 400, letterSpacing: "-.02em", textAlign: "center", marginBottom: 52 }}>Five moments.<br /><em style={{ color: "#8B7CFF" }}>One story.</em></h2>
+          <div style={{ position: "relative" }}>
+            <div style={{ position: "absolute", left: "50%", top: 0, bottom: 0, width: 1, background: "linear-gradient(to bottom,transparent,rgba(139,124,255,.25) 10%,rgba(139,124,255,.25) 90%,transparent)", transform: "translateX(-50%)" }} />
+            {STEPS.map(([icon, title, desc], i) => {
+              const iconBox = <div style={{ width: 56, height: 56, background: "#141417", border: "1px solid rgba(139,124,255,.22)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, position: "relative", zIndex: 1, animation: "gs 4s ease-in-out infinite" }}>{icon}</div>
+              const textBox = (align: "right" | "left") => <div style={{ textAlign: align }}><div className="serif" style={{ fontSize: 21, marginBottom: 5 }}>{title}</div><div style={{ fontSize: 13, color: "#7B7B8F", lineHeight: 1.65 }}>{desc}</div></div>
+              return (
+                <div key={i} style={{ display: "grid", gridTemplateColumns: "1fr 56px 1fr", gap: 20, alignItems: "center", marginBottom: 44 }}>
+                  {i % 2 === 0 ? (<>{textBox("right")}{iconBox}<div /></>) : (<><div />{iconBox}{textBox("left")}</>)}
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section style={{ padding: "72px 24px", maxWidth: 780, margin: "0 auto" }}>
+        <h2 className="serif" style={{ fontSize: "clamp(24px,3.5vw,38px)", fontWeight: 400, letterSpacing: "-.02em", textAlign: "center", marginBottom: 44 }}>One story. <em style={{ color: "#C4A84A" }}>Two moments.</em></h2>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr auto 1fr", gap: 16, alignItems: "center" }}>
+          <div style={{ background: "#141417", border: "1px solid rgba(139,124,255,.22)", borderRadius: 14, padding: 24, animation: "gs 5s ease-in-out infinite" }}>
+            <div style={{ fontSize: 9, color: "#8B7CFF", fontWeight: 600, letterSpacing: ".1em", textTransform: "uppercase", marginBottom: 12 }}>SEALED · 127 DAYS AGO</div>
+            <div className="serif" style={{ fontSize: 14, fontStyle: "italic", color: "#D0D0E0", lineHeight: 1.72, marginBottom: 10 }}>
+              "The interview is tomorrow and I have never wanted anything more. My hands won't stop shaking. If I don't get this, I don't know who I am anymore."
+            </div>
+            <div style={{ fontSize: 10, color: "#6B6B80" }}>Grey Sparrow · Career</div>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
+            <div style={{ width: 1, height: 40, background: "linear-gradient(to bottom,rgba(139,124,255,.3),rgba(196,168,74,.3))" }} />
+            <div style={{ width: 7, height: 7, borderRight: "1px solid rgba(196,168,74,.6)", borderBottom: "1px solid rgba(196,168,74,.6)", transform: "rotate(45deg)" }} />
+            <div className="serif" style={{ fontSize: 10, color: "#6B6B80", fontStyle: "italic" }}>127 days</div>
+          </div>
+          <div style={{ background: "#141417", border: "1px solid rgba(196,168,74,.25)", borderRadius: 14, padding: 24, animation: "gg 5s ease-in-out infinite" }}>
+            <div style={{ fontSize: 9, color: "#C4A84A", fontWeight: 600, letterSpacing: ".1em", textTransform: "uppercase", marginBottom: 12 }}>ECHO · REVEALED</div>
+            <div className="serif" style={{ fontSize: 14, fontStyle: "italic", color: "#D0D0E0", lineHeight: 1.72, marginBottom: 10 }}>
+              "I got it. Reading this, I want to tell that person: the shaking hands were not weakness. They were a sign of how much it mattered."
+            </div>
+            <div style={{ height: 1, background: "linear-gradient(90deg,rgba(196,168,74,.4),transparent)", marginBottom: 10 }} />
+            <div style={{ display: "flex", gap: 12 }}>
+              {["❤️ 2.1k", "💔 89", "🔥 341", "🕯️ 1.4k"].map(r => <span key={r} style={{ fontSize: 11, color: "#7B7B8F" }}>{r}</span>)}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section style={{ padding: "72px 24px", background: "#0C0C0F", borderTop: "1px solid rgba(139,124,255,.06)" }}>
+        <div style={{ maxWidth: 800, margin: "0 auto" }}>
+          <div style={{ fontSize: 10, color: "#8B7CFF", letterSpacing: ".14em", textTransform: "uppercase", textAlign: "center", marginBottom: 14 }}>Powered by OpenRouter</div>
+          <h2 className="serif" style={{ fontSize: "clamp(24px,3.5vw,40px)", fontWeight: 400, letterSpacing: "-.02em", textAlign: "center", marginBottom: 44, lineHeight: 1.2 }}>Two AI minds.<br /><em style={{ color: "#8B7CFF" }}>Different roles.</em></h2>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18, marginBottom: 18 }}>
+            <div style={{ background: "#141417", border: "1px solid rgba(139,124,255,.18)", borderRadius: 18, padding: 28, animation: "gs 6s ease-in-out infinite" }}>
+              <div style={{ width: 44, height: 44, borderRadius: "50%", background: "rgba(139,124,255,.18)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, marginBottom: 18 }}>👁</div>
+              <div className="serif" style={{ fontSize: 20, marginBottom: 9 }}>Grey Observer</div>
+              <div style={{ fontSize: 13, color: "#7B7B8F", lineHeight: 1.65, marginBottom: 16 }}>Attached to every story the moment it's sealed. One short reflection. Not advice. Not therapy. A mirror.</div>
+              <div style={{ borderTop: "1px solid rgba(139,124,255,.18)", paddingTop: 14, marginBottom: 12 }}>
+                <div className="serif" style={{ fontSize: 12, fontStyle: "italic", color: "#9595A8", lineHeight: 1.6 }}>"There is something in this that you already know. The writing of it was the beginning of knowing."</div>
+              </div>
+              <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                {["Runs once", "Cached", "Never repeated"].map(t => <span key={t} style={{ fontSize: 9, color: "#6B6B80", background: "#1A1A20", border: "1px solid rgba(139,124,255,.18)", borderRadius: 20, padding: "3px 10px" }}>{t}</span>)}
+              </div>
+            </div>
+            <div style={{ background: "#141417", border: "1px solid rgba(196,168,74,.18)", borderRadius: 18, padding: 28, animation: "gg 6s ease-in-out infinite" }}>
+              <div style={{ width: 44, height: 44, borderRadius: "50%", background: "rgba(196,168,74,.18)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, marginBottom: 18 }}>🔮</div>
+              <div className="serif" style={{ fontSize: 20, marginBottom: 9 }}>Grey Guardian</div>
+              <div style={{ fontSize: 13, color: "#7B7B8F", lineHeight: 1.65, marginBottom: 16 }}>The community narrator. Every Sunday, it surveys the week's emotional landscape and writes a chronicle.</div>
+              <div style={{ borderTop: "1px solid rgba(196,168,74,.18)", paddingTop: 14, marginBottom: 12 }}>
+                <div className="serif" style={{ fontSize: 12, fontStyle: "italic", color: "#9595A8", lineHeight: 1.6 }}>"The fears of this week clustered around what cannot be controlled. The hopes were quieter. Both were real."</div>
+              </div>
+              <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                {["Weekly", "OpenRouter", "Community-wide"].map(t => <span key={t} style={{ fontSize: 9, color: "#6B6B80", background: "#1A1A20", border: "1px solid rgba(196,168,74,.18)", borderRadius: 20, padding: "3px 10px" }}>{t}</span>)}
+              </div>
+            </div>
+          </div>
+          <div style={{ background: "#141417", border: "1px solid rgba(196,168,74,.15)", borderRadius: 18, padding: "22px 28px", display: "flex", alignItems: "center", gap: 22 }}>
+            <div style={{ width: 46, height: 46, background: "linear-gradient(135deg,#C4A84A,#8B7CFF)", borderRadius: 11, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, flexShrink: 0 }}>✨</div>
+            <div style={{ flex: 1 }}>
+              <div className="serif" style={{ fontSize: 18, marginBottom: 5 }}>Personal Guardian</div>
+              <div style={{ fontSize: 13, color: "#7B7B8F", lineHeight: 1.6 }}>Premium only. Reads your entire journey and reflects back who you are becoming over time.</div>
+            </div>
+            <div style={{ background: "linear-gradient(135deg,rgba(196,168,74,.15),rgba(139,124,255,.15))", border: "1px solid rgba(196,168,74,.2)", borderRadius: 7, padding: "5px 14px", fontSize: 10, color: "#C4A84A", fontWeight: 600, letterSpacing: ".08em", textTransform: "uppercase", flexShrink: 0 }}>Grey Premium</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="founder" style={{ padding: "88px 24px", maxWidth: 900, margin: "0 auto" }}>
+        <div style={{ textAlign: "center", marginBottom: 56 }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
+            <div style={{ height: 1, width: 44, background: "rgba(139,124,255,.3)" }} />
+            <span style={{ fontSize: 10, color: "#8B7CFF", letterSpacing: ".14em", textTransform: "uppercase" }}>The Reason It Exists</span>
+            <div style={{ height: 1, width: 44, background: "rgba(139,124,255,.3)" }} />
+          </div>
+          <h2 className="serif" style={{ fontSize: "clamp(24px,3.8vw,44px)", fontWeight: 400, letterSpacing: "-.03em", lineHeight: 1.1 }}>Built by one person.<br /><em style={{ color: "#8B7CFF" }}>For a moment no one else could hold.</em></h2>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "260px 1fr", gap: 56, alignItems: "start" }}>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 20 }}>
+            <div style={{ width: 168, height: 168, borderRadius: "50%", overflow: "hidden", border: "1px solid rgba(139,124,255,.3)", animation: "gs 4s ease-in-out infinite" }}>
+              <img src={PHOTO_DATA_URI} style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top" }} alt="Shiladitya Mallick" />
+            </div>
+            <div style={{ background: "#141417", border: "1px solid rgba(139,124,255,.18)", borderRadius: 12, padding: "18px 22px", width: "100%", textAlign: "center" }}>
+              <div className="serif" style={{ fontSize: 20, fontWeight: 400, marginBottom: 4 }}>Shiladitya Mallick</div>
+              <div style={{ fontSize: 11, color: "#7B7B8F", lineHeight: 1.6 }}>Solo Developer &amp; Creator<br />Kolkata, India</div>
+            </div>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center" }}>
+              <a href="https://www.instagram.com/byshiladityamallick/" target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: 6, background: "#141417", border: "1px solid rgba(139,124,255,.15)", borderRadius: 8, padding: "7px 12px", textDecoration: "none" }}><span>📸</span><span style={{ fontSize: 10, color: "#8B7CFF" }}>Instagram</span></a>
+              <a href="https://www.youtube.com/@byshiladityamallick" target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: 6, background: "#141417", border: "1px solid rgba(139,124,255,.15)", borderRadius: 8, padding: "7px 12px", textDecoration: "none" }}><span>▶️</span><span style={{ fontSize: 10, color: "#8B7CFF" }}>YouTube</span></a>
+            </div>
+          </div>
+          <div>
+            <div style={{ background: "#141417", border: "1px solid rgba(139,124,255,.22)", borderRadius: 16, padding: "24px 26px", marginBottom: 24, animation: "gs 5s ease-in-out infinite" }}>
+              <div style={{ fontSize: 9, color: "#8B7CFF", fontWeight: 600, letterSpacing: ".1em", textTransform: "uppercase", marginBottom: 12 }}>SEALED · BEFORE I BUILT ANYTHING</div>
+              <div className="serif" style={{ fontSize: 15, fontStyle: "italic", color: "#D0D0E0", lineHeight: 1.78 }}>
+                "I don't know what's going to happen. But right now — I am afraid, I am hopeful, and I am completely unsure. I want to remember exactly what this feels like. Before the person I am right now disappears forever."
+              </div>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 24 }}>
+              <p style={{ fontSize: 13.5, color: "#9090A8", lineHeight: 1.78 }}>I built The Grey Diary because I kept <strong style={{ color: "#D0D0E0" }}>losing the most honest version of myself</strong> — the one who didn't know yet.</p>
+              <blockquote className="serif" style={{ fontSize: "clamp(16px,2vw,19px)", color: "#E8E8F5", fontStyle: "italic", lineHeight: 1.55, borderLeft: "2px solid rgba(139,124,255,.4)", paddingLeft: 20, margin: 0 }}>
+                "By the time I knew what happened, the person who wrote it was already gone. I had no proof he ever existed."
+              </blockquote>
+              <p style={{ fontSize: 13.5, color: "#9090A8", lineHeight: 1.78 }}>I'm a solo developer who has built YouTube channels, apps, and bots. <strong style={{ color: "#D0D0E0" }}>The Grey Diary is the first thing I built because I couldn't find it anywhere else.</strong> Nothing was designed to hold uncertainty and then reunite you with it after time passed.</p>
+              <p style={{ fontSize: 13.5, color: "#9090A8", lineHeight: 1.78 }}>People cannot be me anymore — once those moments pass, no one can retroactively become the witness you needed. The only answer is to seal it when it happens. And let the community meet you there.</p>
+            </div>
+            <div style={{ background: "#141417", border: "1px solid rgba(196,168,74,.22)", borderRadius: 16, padding: "22px 26px", animation: "gg 5s ease-in-out infinite" }}>
+              <div style={{ fontSize: 9, color: "#C4A84A", fontWeight: 600, letterSpacing: ".1em", textTransform: "uppercase", marginBottom: 12 }}>ECHO · WHAT I KNOW NOW</div>
+              <div className="serif" style={{ fontSize: 14, fontStyle: "italic", color: "#D0D0E0", lineHeight: 1.75, marginBottom: 12 }}>
+                "The Grey Diary exists because of the person I was before I knew. Every feature, every word, every design decision is for him. For you. For the version of you sitting with uncertainty right now."
+              </div>
+              <div style={{ height: 1, background: "linear-gradient(90deg,rgba(196,168,74,.4),transparent)", marginBottom: 12 }} />
+              <div style={{ fontSize: 11, color: "#7B7B8F" }}>Shiladitya Mallick · Solo Developer &amp; Founder · <span style={{ color: "#8B7CFF" }}>The Grey Diary</span></div>
+            </div>
+            <div style={{ display: "flex", background: "#141417", border: "1px solid rgba(139,124,255,.12)", borderRadius: 10, overflow: "hidden", marginTop: 16 }}>
+              {[["1", "Developer"], ["₹0", "Funding"], ["∞", "Reason"], ["24/7", "Building"]].map(([n, l], i) => (
+                <div key={i} style={{ flex: 1, textAlign: "center", padding: "13px 8px", borderRight: i < 3 ? "1px solid rgba(139,124,255,.08)" : "none" }}>
+                  <div className="serif" style={{ fontSize: 21, color: "#F5F5F5", marginBottom: 2 }}>{n}</div>
+                  <div style={{ fontSize: 9, color: "#6B6B80", textTransform: "uppercase", letterSpacing: ".08em" }}>{l}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="plans" style={{ padding: "72px 24px", background: "#0C0C0F", borderTop: "1px solid rgba(139,124,255,.06)" }}>
+        <div style={{ maxWidth: 880, margin: "0 auto" }}>
+          <h2 className="serif" style={{ fontSize: "clamp(24px,3.5vw,44px)", fontWeight: 400, letterSpacing: "-.02em", textAlign: "center", marginBottom: 10, lineHeight: 1.2 }}>Start free.<br /><em style={{ color: "#8B7CFF" }}>Unlock depth.</em></h2>
+          <p style={{ fontSize: 14, color: "#7B7B8F", textAlign: "center", marginBottom: 44 }}>Three ways to carry your stories.</p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 18 }}>
+            {PLANS.map((pl, i) => (
+              <div key={i} style={{ background: "#141417", border: "1px solid " + (pl.gd ? "rgba(196,168,74,.28)" : pl.hl ? "rgba(139,124,255,.35)" : "rgba(139,124,255,.13)"), borderRadius: 18, padding: "26px 22px", position: "relative" }}>
+                {pl.hl && <div style={{ position: "absolute", top: -11, left: "50%", transform: "translateX(-50%)", background: "linear-gradient(135deg,#8B7CFF,#7060EE)", borderRadius: 20, padding: "4px 14px", fontSize: 9, fontWeight: 600, color: "#fff", letterSpacing: ".09em", textTransform: "uppercase", whiteSpace: "nowrap" }}>Most Popular</div>}
+                <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: ".09em", textTransform: "uppercase", marginBottom: 6, color: pl.gd ? "#C4A84A" : pl.hl ? "#A89BFF" : "#8B7CFF" }}>{pl.n}</div>
+                <div style={{ display: "flex", alignItems: "baseline", gap: 3, marginBottom: 3 }}>
+                  <span className="serif" style={{ fontSize: 34, fontWeight: 400 }}>{pl.p}</span>
+                  {pl.per && <span style={{ fontSize: 12, color: "#6B6B80" }}>{pl.per}</span>}
+                </div>
+                <div style={{ fontSize: 12, color: "#6B6B80", marginBottom: 20 }}>{pl.d}</div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 9, marginBottom: 24 }}>
+                  {pl.f.map(feat => (
+                    <div key={feat} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "#C0C0D0" }}>
+                      <div style={{ width: 3, height: 3, borderRadius: "50%", background: pl.gd ? "#C4A84A" : "#8B7CFF", flexShrink: 0 }} />{feat}
+                    </div>
+                  ))}
+                </div>
+                <a href={googleUrl} style={{ display: "block", width: "100%", padding: 11, borderRadius: 9, textAlign: "center", textDecoration: "none", fontSize: 13, fontWeight: 500, background: pl.hl ? "linear-gradient(135deg,#8B7CFF,#7060EE)" : pl.gd ? "transparent" : "#1A1A20", border: pl.gd ? "1px solid rgba(196,168,74,.4)" : pl.hl ? "none" : "1px solid rgba(139,124,255,.15)", color: pl.hl ? "#fff" : pl.gd ? "#C4A84A" : "#8B7CFF" }}>
+                  {pl.n === "Free" ? "Start Writing" : "Get " + pl.n}
+                </a>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section style={{ padding: "72px 24px 100px", textAlign: "center" }}>
+        <div style={{ maxWidth: 580, margin: "0 auto" }}>
+          <h2 className="serif" style={{ fontSize: "clamp(32px,5vw,52px)", fontWeight: 400, letterSpacing: "-.03em", lineHeight: 1.12, marginBottom: 20 }}>
+            "I wrote this<br /><em>before</em> I knew<br />what would happen."
+          </h2>
+          <p style={{ fontSize: 14, color: "#7B7B8F", lineHeight: 1.7, marginBottom: 44 }}>Every reveal becomes a shareable card. A story with a beginning and an ending, separated by time itself.</p>
+          <a href={googleUrl} style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "#fff", borderRadius: 10, padding: "13px 28px", color: "#111", fontSize: 14, fontWeight: 500, textDecoration: "none" }}>
+            <GoogleIcon />
+            Seal Your First Story
+          </a>
+        </div>
+      </section>
+
+      <footer style={{ padding: "24px 28px", borderTop: "1px solid rgba(139,124,255,.06)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
+        <div className="serif" style={{ fontSize: 15, fontStyle: "italic" }}>The Grey Diary</div>
+        <div style={{ fontSize: 11, color: "#6B6B80" }}>thegreydiary.online · Where stories wait for their endings</div>
+        <div style={{ fontSize: 11, color: "#6B6B80" }}>Built by Shiladitya Mallick</div>
+      </footer>
     </div>
   )
 }
