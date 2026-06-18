@@ -43,18 +43,18 @@ export default function LandingPage() {
   return (
     <div style={{ background: "#0B0B0D", color: "#F5F5F5", fontFamily: "Inter,system-ui,sans-serif" }}>
 
-      <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 200, background: "rgba(11,11,13,.9)", backdropFilter: "blur(24px)", borderBottom: "1px solid rgba(139,124,255,.08)", height: 58, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 28px" }}>
+      <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 200, background: "rgba(11,11,13,.9)", backdropFilter: "blur(24px)", borderBottom: "1px solid rgba(139,124,255,.08)", height: 58, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 16px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ width: 30, height: 30, background: "linear-gradient(135deg,#8B7CFF,#5A4FCC)", borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>📔</div>
-          <span style={{ fontFamily: "Instrument Serif,serif", fontSize: 16, fontStyle: "italic" }}>The Grey Diary</span>
+          <div style={{ width: 30, height: 30, background: "linear-gradient(135deg,#8B7CFF,#5A4FCC)", borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, flexShrink: 0 }}>📔</div>
+          <span style={{ fontFamily: "Instrument Serif,serif", fontSize: 16, fontStyle: "italic", whiteSpace: "nowrap" }}>The Grey Diary</span>
         </div>
-        <div style={{ display: "flex", gap: 20, alignItems: "center" }}>
-          <a href="#vault" style={{ color: "#7B7B8F", fontSize: 13, textDecoration: "none" }}>Vault</a>
-          <a href="#founder" style={{ color: "#7B7B8F", fontSize: 13, textDecoration: "none" }}>Story</a>
-          <a href="#plans" style={{ color: "#7B7B8F", fontSize: 13, textDecoration: "none" }}>Plans</a>
-          <a href={googleUrl} style={{ display: "flex", alignItems: "center", gap: 8, background: "#fff", borderRadius: 8, padding: "8px 18px", color: "#111", fontSize: 13, fontWeight: 500, textDecoration: "none" }}>
+        <div className="nav-links-desktop">
+          <a href="#vault" className="nav-text-link" style={{ color: "#7B7B8F", fontSize: 13, textDecoration: "none" }}>Vault</a>
+          <a href="#founder" className="nav-text-link" style={{ color: "#7B7B8F", fontSize: 13, textDecoration: "none" }}>Story</a>
+          <a href="#plans" className="nav-text-link" style={{ color: "#7B7B8F", fontSize: 13, textDecoration: "none" }}>Plans</a>
+          <a href={googleUrl} className="tap-shrink" style={{ display: "flex", alignItems: "center", gap: 8, background: "#fff", borderRadius: 8, padding: "8px 16px", color: "#111", fontSize: 13, fontWeight: 500, textDecoration: "none", whiteSpace: "nowrap" }}>
             <GoogleIcon />
-            Begin Writing
+            <span className="nav-text-link">Begin Writing</span>
           </a>
         </div>
       </nav>
@@ -77,7 +77,7 @@ export default function LandingPage() {
 
       <section style={{ padding: "72px 24px", maxWidth: 860, margin: "0 auto" }}>
         <h2 className="serif" style={{ fontSize: "clamp(24px,3.5vw,38px)", fontWeight: 400, letterSpacing: "-.02em", textAlign: "center", marginBottom: 40 }}>Stories sealed right now.</h2>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))", gap: 16 }}>
+        <div className="sample-cards-grid">
           {SAMPLE.map((c, i) => (
             <div key={i} style={{ background: "#141417", border: "1px solid " + (c.r ? "rgba(196,168,74,.28)" : "rgba(139,124,255,.2)"), borderRadius: 14, padding: 22, animation: (c.r ? "gg" : "gs") + " 4s ease-in-out infinite" }}>
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
@@ -97,11 +97,12 @@ export default function LandingPage() {
           <div style={{ position: "relative" }}>
             <div style={{ position: "absolute", left: "50%", top: 0, bottom: 0, width: 1, background: "linear-gradient(to bottom,transparent,rgba(139,124,255,.25) 10%,rgba(139,124,255,.25) 90%,transparent)", transform: "translateX(-50%)" }} />
             {STEPS.map(([icon, title, desc], i) => {
-              const iconBox = <div style={{ width: 56, height: 56, background: "#141417", border: "1px solid rgba(139,124,255,.22)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, position: "relative", zIndex: 1, animation: "gs 4s ease-in-out infinite" }}>{icon}</div>
-              const textBox = (align: "right" | "left") => <div style={{ textAlign: align }}><div className="serif" style={{ fontSize: 21, marginBottom: 5 }}>{title}</div><div style={{ fontSize: 13, color: "#7B7B8F", lineHeight: 1.65 }}>{desc}</div></div>
+              const iconBox = <div className="step-icon" style={{ width: 56, height: 56, background: "#141417", border: "1px solid rgba(139,124,255,.22)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, position: "relative", zIndex: 1, animation: "gs 4s ease-in-out infinite" }}>{icon}</div>
+              const textBox = (align: "right" | "left") => <div className="step-text" style={{ textAlign: align }}><div className="serif" style={{ fontSize: 21, marginBottom: 5 }}>{title}</div><div style={{ fontSize: 13, color: "#7B7B8F", lineHeight: 1.65 }}>{desc}</div></div>
+              const spacer = <div className="step-spacer" />
               return (
-                <div key={i} style={{ display: "grid", gridTemplateColumns: "1fr 56px 1fr", gap: 20, alignItems: "center", marginBottom: 44 }}>
-                  {i % 2 === 0 ? (<>{textBox("right")}{iconBox}<div /></>) : (<><div />{iconBox}{textBox("left")}</>)}
+                <div key={i} className="steps-grid" style={{ marginBottom: 44 }}>
+                  {i % 2 === 0 ? (<>{textBox("right")}{iconBox}{spacer}</>) : (<>{spacer}{iconBox}{textBox("left")}</>)}
                 </div>
               )
             })}
@@ -111,7 +112,7 @@ export default function LandingPage() {
 
       <section style={{ padding: "72px 24px", maxWidth: 780, margin: "0 auto" }}>
         <h2 className="serif" style={{ fontSize: "clamp(24px,3.5vw,38px)", fontWeight: 400, letterSpacing: "-.02em", textAlign: "center", marginBottom: 44 }}>One story. <em style={{ color: "#C4A84A" }}>Two moments.</em></h2>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr auto 1fr", gap: 16, alignItems: "center" }}>
+        <div className="echo-grid">
           <div style={{ background: "#141417", border: "1px solid rgba(139,124,255,.22)", borderRadius: 14, padding: 24, animation: "gs 5s ease-in-out infinite" }}>
             <div style={{ fontSize: 9, color: "#8B7CFF", fontWeight: 600, letterSpacing: ".1em", textTransform: "uppercase", marginBottom: 12 }}>SEALED · 127 DAYS AGO</div>
             <div className="serif" style={{ fontSize: 14, fontStyle: "italic", color: "#D0D0E0", lineHeight: 1.72, marginBottom: 10 }}>
@@ -119,7 +120,7 @@ export default function LandingPage() {
             </div>
             <div style={{ fontSize: 10, color: "#6B6B80" }}>Grey Sparrow · Career</div>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
+          <div className="echo-arrow" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
             <div style={{ width: 1, height: 40, background: "linear-gradient(to bottom,rgba(139,124,255,.3),rgba(196,168,74,.3))" }} />
             <div style={{ width: 7, height: 7, borderRight: "1px solid rgba(196,168,74,.6)", borderBottom: "1px solid rgba(196,168,74,.6)", transform: "rotate(45deg)" }} />
             <div className="serif" style={{ fontSize: 10, color: "#6B6B80", fontStyle: "italic" }}>127 days</div>
@@ -141,7 +142,7 @@ export default function LandingPage() {
         <div style={{ maxWidth: 800, margin: "0 auto" }}>
           <div style={{ fontSize: 10, color: "#8B7CFF", letterSpacing: ".14em", textTransform: "uppercase", textAlign: "center", marginBottom: 14 }}>Powered by OpenRouter</div>
           <h2 className="serif" style={{ fontSize: "clamp(24px,3.5vw,40px)", fontWeight: 400, letterSpacing: "-.02em", textAlign: "center", marginBottom: 44, lineHeight: 1.2 }}>Two AI minds.<br /><em style={{ color: "#8B7CFF" }}>Different roles.</em></h2>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18, marginBottom: 18 }}>
+          <div className="two-col-grid" style={{ marginBottom: 18 }}>
             <div style={{ background: "#141417", border: "1px solid rgba(139,124,255,.18)", borderRadius: 18, padding: 28, animation: "gs 6s ease-in-out infinite" }}>
               <div style={{ width: 44, height: 44, borderRadius: "50%", background: "rgba(139,124,255,.18)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, marginBottom: 18 }}>👁</div>
               <div className="serif" style={{ fontSize: 20, marginBottom: 9 }}>Grey Observer</div>
@@ -185,7 +186,7 @@ export default function LandingPage() {
           </div>
           <h2 className="serif" style={{ fontSize: "clamp(24px,3.8vw,44px)", fontWeight: 400, letterSpacing: "-.03em", lineHeight: 1.1 }}>Built by one person.<br /><em style={{ color: "#8B7CFF" }}>For a moment no one else could hold.</em></h2>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "260px 1fr", gap: 56, alignItems: "start" }}>
+        <div className="founder-grid">
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 20 }}>
             <div style={{ width: 168, height: 168, borderRadius: "50%", overflow: "hidden", border: "1px solid rgba(139,124,255,.3)", animation: "gs 4s ease-in-out infinite" }}>
               <img src={PHOTO_DATA_URI} style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top" }} alt="Shiladitya Mallick" />
@@ -238,7 +239,7 @@ export default function LandingPage() {
         <div style={{ maxWidth: 880, margin: "0 auto" }}>
           <h2 className="serif" style={{ fontSize: "clamp(24px,3.5vw,44px)", fontWeight: 400, letterSpacing: "-.02em", textAlign: "center", marginBottom: 10, lineHeight: 1.2 }}>Start free.<br /><em style={{ color: "#8B7CFF" }}>Unlock depth.</em></h2>
           <p style={{ fontSize: 14, color: "#7B7B8F", textAlign: "center", marginBottom: 44 }}>Three ways to carry your stories.</p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 18 }}>
+          <div className="three-col-grid">
             {PLANS.map((pl, i) => (
               <div key={i} style={{ background: "#141417", border: "1px solid " + (pl.gd ? "rgba(196,168,74,.28)" : pl.hl ? "rgba(139,124,255,.35)" : "rgba(139,124,255,.13)"), borderRadius: 18, padding: "26px 22px", position: "relative" }}>
                 {pl.hl && <div style={{ position: "absolute", top: -11, left: "50%", transform: "translateX(-50%)", background: "linear-gradient(135deg,#8B7CFF,#7060EE)", borderRadius: 20, padding: "4px 14px", fontSize: 9, fontWeight: 600, color: "#fff", letterSpacing: ".09em", textTransform: "uppercase", whiteSpace: "nowrap" }}>Most Popular</div>}

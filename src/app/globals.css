@@ -1,9 +1,17 @@
 @import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&display=swap");
+
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{background:#0B0B0D;color:#F5F5F5;font-family:"Inter",system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:#0B0B0D;color:#F5F5F5;font-family:"Inter",system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;-webkit-tap-highlight-color:transparent}
 .serif{font-family:"Instrument Serif",Georgia,serif}
-::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:#0B0B0D}::-webkit-scrollbar-thumb{background:rgba(139,124,255,.35);border-radius:2px}
+a, button { -webkit-tap-highlight-color: transparent; }
+img { -webkit-user-drag: none; }
+
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:#0B0B0D}
+::-webkit-scrollbar-thumb{background:rgba(139,124,255,.35);border-radius:2px}
+
+/* ── Animations ── */
 @keyframes gs{0%,100%{box-shadow:0 0 18px rgba(139,124,255,.15),0 0 0 1px rgba(139,124,255,.12)}50%{box-shadow:0 0 36px rgba(139,124,255,.35),0 0 0 1px rgba(139,124,255,.25)}}
 @keyframes gg{0%,100%{box-shadow:0 0 18px rgba(196,168,74,.15),0 0 0 1px rgba(196,168,74,.12)}50%{box-shadow:0 0 36px rgba(196,168,74,.38),0 0 0 1px rgba(196,168,74,.28)}}
 @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
@@ -12,4 +20,76 @@ body{background:#0B0B0D;color:#F5F5F5;font-family:"Inter",system-ui,sans-serif;-
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
 @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
 @keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
-@keyframes orbit-a{from{transform:rotate(0deg) translateX(var(--r)) rotate(0deg)}to{transform:rotate(360deg) translateX(var(--r)) rotate(-360deg)}}
+@keyframes skeleton-pulse{0%,100%{opacity:.5}50%{opacity:.9}}
+@keyframes pop-in{0%{opacity:0;transform:scale(.85)}100%{opacity:1;transform:scale(1)}}
+@keyframes confetti-fall{0%{transform:translateY(-10vh) rotate(0);opacity:1}100%{transform:translateY(110vh) rotate(540deg);opacity:0}}
+
+.skeleton{background:linear-gradient(90deg,#141417 25%,#1c1c24 37%,#141417 63%);background-size:400% 100%;animation:shimmer 2.2s ease-in-out infinite;border-radius:8px}
+
+/* ── App shell layout (mobile-first) ── */
+.app-shell{min-height:100vh;background:#0B0B0D;color:#F5F5F5;font-family:"Inter",system-ui,sans-serif}
+.app-content{padding-bottom:calc(78px + env(safe-area-inset-bottom))}
+.app-content-desktop-pad{padding-top:60px}
+
+.bottom-nav-wrap{display:block}
+.desktop-nav-wrap{display:none}
+@media (min-width:880px){
+  .bottom-nav-wrap{display:none}
+  .desktop-nav-wrap{display:flex}
+  .app-content{padding-bottom:0}
+}
+
+/* ── Responsive grid utilities for landing page ── */
+.founder-grid{display:grid;grid-template-columns:260px 1fr;gap:56px;align-items:start}
+@media (max-width:760px){
+  .founder-grid{grid-template-columns:1fr;gap:32px}
+}
+
+.echo-grid{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center}
+@media (max-width:680px){
+  .echo-grid{grid-template-columns:1fr;gap:14px}
+  .echo-grid .echo-arrow{order:2;flex-direction:row !important;height:auto !important}
+  .echo-grid .echo-arrow > div:first-child{display:none}
+}
+
+.two-col-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media (max-width:640px){
+  .two-col-grid{grid-template-columns:1fr}
+}
+
+.three-col-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media (max-width:760px){
+  .three-col-grid{grid-template-columns:1fr;max-width:360px;margin:0 auto}
+}
+
+.steps-grid{display:grid;grid-template-columns:1fr 56px 1fr;gap:20px;align-items:center}
+@media (max-width:560px){
+  .steps-grid{grid-template-columns:44px 1fr;gap:14px}
+  .steps-grid .step-spacer{display:none}
+  .steps-grid .step-icon{order:1;width:44px !important;height:44px !important;font-size:18px !important}
+  .steps-grid .step-text{order:2;text-align:left !important}
+}
+
+.nav-links-desktop{display:flex;gap:20px;align-items:center}
+@media (max-width:640px){
+  .nav-links-desktop .nav-text-link{display:none}
+}
+
+.sample-cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+@media (max-width:480px){
+  .sample-cards-grid{grid-template-columns:1fr}
+}
+
+/* ── Tap feedback ── */
+.tap-shrink{transition:transform .15s ease}
+.tap-shrink:active{transform:scale(.96)}
+
+/* ── Safe area helpers ── */
+.safe-top{padding-top:env(safe-area-inset-top)}
+.safe-bottom{padding-bottom:env(safe-area-inset-bottom)}
+
+/* ── PWA standalone mode detection helper (no-op base) ── */
+@media (display-mode: standalone){
+  .pwa-only{display:block}
+}
+.pwa-only{display:none}
