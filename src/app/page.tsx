@@ -61,6 +61,97 @@ export default function LandingPage() {
 
       <GuardianHero apiUrl={API} />
 
+      {/* WHY THIS EXISTS — the core human truth, explained simply */}
+      <section style={{ padding: "80px 24px 72px", maxWidth: 880, margin: "0 auto" }}>
+        <div style={{ textAlign: "center", marginBottom: 48 }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+            <div style={{ height: 1, width: 36, background: "rgba(139,124,255,.3)" }} />
+            <span style={{ fontSize: 10, color: "#8B7CFF", letterSpacing: ".14em", textTransform: "uppercase" }}>Why The Grey Diary Exists</span>
+            <div style={{ height: 1, width: 36, background: "rgba(139,124,255,.3)" }} />
+          </div>
+          <h2 className="serif" style={{ fontSize: "clamp(26px,4.2vw,44px)", fontWeight: 400, letterSpacing: "-.02em", lineHeight: 1.18, marginBottom: 18 }}>
+            You cannot stop time.<br /><em style={{ color: "#8B7CFF" }}>But you can seal a moment inside it.</em>
+          </h2>
+          <p style={{ fontSize: 14.5, color: "#9090A8", lineHeight: 1.8, maxWidth: 560, margin: "0 auto" }}>
+            Every important moment happens once — without you knowing how it ends. By the time you find out, the version of you who didn't know is already gone. Your memory quietly rewrites itself to match the outcome. <strong style={{ color: "#C0C0D8" }}>The Grey Diary captures the moment exactly as it was — before you knew — and holds it until you're ready to face it again.</strong>
+          </p>
+        </div>
+
+        {/* Old way vs Grey Diary way */}
+        <div className="two-col-grid" style={{ marginBottom: 56 }}>
+          <div style={{ background: "#141417", border: "1px solid rgba(139,124,255,.12)", borderRadius: 18, padding: "26px 24px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18 }}>
+              <div style={{ width: 36, height: 36, borderRadius: "50%", background: "rgba(255,107,120,.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>🧠</div>
+              <div className="serif" style={{ fontSize: 17, color: "#D0A8AC" }}>Without The Grey Diary</div>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              {[
+                "You feel something real in the moment — fear, hope, doubt.",
+                "Time passes. You learn how it actually turned out.",
+                "Your brain quietly rewrites the memory to match the outcome.",
+                "The original feeling is gone — you can't even fully trust your memory of it.",
+              ].map((t, i) => (
+                <div key={i} style={{ display: "flex", gap: 10, fontSize: 12.5, color: "#9C9CB0", lineHeight: 1.6 }}>
+                  <span style={{ color: "#FF6B78", flexShrink: 0 }}>✕</span>{t}
+                </div>
+              ))}
+            </div>
+          </div>
+          <div style={{ background: "#141417", border: "1px solid rgba(196,168,74,.28)", borderRadius: 18, padding: "26px 24px", animation: "gg 5s ease-in-out infinite" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 18 }}>
+              <div style={{ width: 36, height: 36, borderRadius: "50%", background: "rgba(196,168,74,.12)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>🔒</div>
+              <div className="serif" style={{ fontSize: 17, color: "#E8D8A8" }}>With The Grey Diary</div>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              {[
+                "You write the real feeling, right now — unedited, unfiltered.",
+                "It's sealed. Even you can't reread or quietly rewrite it.",
+                "Time passes naturally. Life happens, as it always does.",
+                "You unlock it later and meet your exact past self, word for word.",
+              ].map((t, i) => (
+                <div key={i} style={{ display: "flex", gap: 10, fontSize: 12.5, color: "#C0C0D8", lineHeight: 1.6 }}>
+                  <span style={{ color: "#C4A84A", flexShrink: 0 }}>✓</span>{t}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Relatable Indian moments */}
+        <div style={{ marginBottom: 8 }}>
+          <div style={{ textAlign: "center", marginBottom: 26 }}>
+            <span style={{ fontSize: 10, color: "#6B6B80", letterSpacing: ".1em", textTransform: "uppercase" }}>Moments You've Already Lived</span>
+          </div>
+          <div className="sample-cards-grid">
+            {[
+              ["📝", "The night before board results", "You write what you're afraid of. Months later, you find out if the fear was right."],
+              ["✈️", "Before a visa or job interview", "You write what's at stake, in your own words, before anyone says yes or no."],
+              ["💍", "The night before the wedding", "Equal parts joy and terror. Worth keeping exactly as it felt — not as you'll remember it."],
+              ["🏏", "World Cup final eve", "Whole country holding its breath. You write the nervous hope before the result decides it."],
+            ].map(([icon, title, desc], i) => (
+              <div key={i} style={{ background: "#141417", border: "1px solid rgba(139,124,255,.13)", borderRadius: 14, padding: 20 }}>
+                <div style={{ fontSize: 22, marginBottom: 10 }}>{icon}</div>
+                <div className="serif" style={{ fontSize: 15, color: "#E0E0F0", marginBottom: 8, lineHeight: 1.3 }}>{title}</div>
+                <div style={{ fontSize: 12, color: "#8888A8", lineHeight: 1.6 }}>{desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* The time capsule analogy — bridges familiar concept to the product */}
+      <section style={{ padding: "0 24px 80px", maxWidth: 720, margin: "0 auto", textAlign: "center" }}>
+        <div style={{ background: "linear-gradient(135deg,rgba(139,124,255,.08),rgba(196,168,74,.05))", border: "1px solid rgba(139,124,255,.18)", borderRadius: 20, padding: "36px 28px" }}>
+          <div style={{ fontSize: 30, marginBottom: 14 }}>📦 → 📔</div>
+          <div className="serif" style={{ fontSize: "clamp(19px,2.5vw,24px)", fontStyle: "italic", color: "#E8E8F5", lineHeight: 1.4, marginBottom: 14 }}>
+            You've actually done this before.
+          </div>
+          <p style={{ fontSize: 13.5, color: "#9090A8", lineHeight: 1.8, maxWidth: 520, margin: "0 auto" }}>
+            Remember burying a time capsule in school — letters sealed away, opened years later at a reunion? The Grey Diary is the same idea, just for your inner life instead of objects. No digging required, no waiting for a reunion. Just you, a moment, and a date in the future you choose yourself.
+          </p>
+        </div>
+      </section>
+
       <section id="vault" style={{ padding: "72px 24px", background: "#0C0C0F", borderTop: "1px solid rgba(139,124,255,.06)" }}>
         <div style={{ textAlign: "center", marginBottom: 20 }}>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
