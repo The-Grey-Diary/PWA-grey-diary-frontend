@@ -260,13 +260,13 @@ export default function LandingPage() {
               </div>
             </div>
           </div>
-          <div style={{ background: "#141417", border: "1px solid rgba(196,168,74,.15)", borderRadius: 18, padding: "22px 28px", display: "flex", alignItems: "center", gap: 22 }}>
+          <div className="guardian-cta-row" style={{ background: "#141417", border: "1px solid rgba(196,168,74,.15)", borderRadius: 18, padding: "22px 28px", display: "flex", alignItems: "center", gap: 22 }}>
             <div style={{ width: 46, height: 46, background: "linear-gradient(135deg,#C4A84A,#8B7CFF)", borderRadius: 11, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, flexShrink: 0 }}>✨</div>
-            <div style={{ flex: 1 }}>
+            <div style={{ flex: 1, minWidth: 0 }}>
               <div className="serif" style={{ fontSize: 18, marginBottom: 5 }}>Personal Guardian</div>
               <div style={{ fontSize: 13, color: "#7B7B8F", lineHeight: 1.6 }}>Premium only. Reads your entire journey and reflects back who you are becoming over time.</div>
             </div>
-            <div style={{ background: "linear-gradient(135deg,rgba(196,168,74,.15),rgba(139,124,255,.15))", border: "1px solid rgba(196,168,74,.2)", borderRadius: 7, padding: "5px 14px", fontSize: 10, color: "#C4A84A", fontWeight: 600, letterSpacing: ".08em", textTransform: "uppercase", flexShrink: 0 }}>Grey Premium</div>
+            <div style={{ background: "linear-gradient(135deg,rgba(196,168,74,.15),rgba(139,124,255,.15))", border: "1px solid rgba(196,168,74,.2)", borderRadius: 7, padding: "5px 14px", fontSize: 10, color: "#C4A84A", fontWeight: 600, letterSpacing: ".08em", textTransform: "uppercase", flexShrink: 0, whiteSpace: "nowrap" }}>Grey Premium</div>
           </div>
         </div>
       </section>
@@ -291,7 +291,7 @@ export default function LandingPage() {
             </div>
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center" }}>
               <a href="https://www.instagram.com/byshiladityamallick/" target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: 6, background: "#141417", border: "1px solid rgba(139,124,255,.15)", borderRadius: 8, padding: "7px 12px", textDecoration: "none" }}><span>📸</span><span style={{ fontSize: 10, color: "#8B7CFF" }}>Instagram</span></a>
-              <a href="https://www.youtube.com/@byshiladityamallick" target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: 6, background: "#141417", border: "1px solid rgba(139,124,255,.15)", borderRadius: 8, padding: "7px 12px", textDecoration: "none" }}><span>▶️</span><span style={{ fontSize: 10, color: "#8B7CFF" }}>YouTube</span></a>
+              <a href="https://www.linkedin.com/in/shiladityamallick" target="_blank" rel="noreferrer" style={{ display: "flex", alignItems: "center", gap: 6, background: "#141417", border: "1px solid rgba(139,124,255,.15)", borderRadius: 8, padding: "7px 12px", textDecoration: "none" }}><span>💼</span><span style={{ fontSize: 10, color: "#8B7CFF" }}>LinkedIn</span></a>
             </div>
           </div>
           <div>

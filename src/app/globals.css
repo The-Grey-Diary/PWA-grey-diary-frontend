@@ -80,6 +80,11 @@ img { -webkit-user-drag: none; }
   .sample-cards-grid{grid-template-columns:1fr}
 }
 
+.guardian-cta-row{}
+@media (max-width:560px){
+  .guardian-cta-row{flex-direction:column !important;align-items:flex-start !important;text-align:left;gap:14px !important}
+}
+
 /* ── Tap feedback ── */
 .tap-shrink{transition:transform .15s ease}
 .tap-shrink:active{transform:scale(.96)}
