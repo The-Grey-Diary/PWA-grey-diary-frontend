@@ -45,6 +45,7 @@ export default function DesktopNav() {
         <Link href="/explore/" style={linkStyle("/explore/")}>Explore</Link>
         <Link href="/capsule/new/" style={linkStyle("/capsule/new/")}>+ Seal</Link>
         <Link href="/wrapped/" style={linkStyle("/wrapped/")}>Wrapped</Link>
+        <Link href="/upgrade/" style={{ color: pathname === "/upgrade/" ? "#C4A84A" : "#C4A84A", fontSize: 13, textDecoration: "none", fontWeight: 600 }}>✨ Upgrade</Link>
         <button
           onClick={logout}
           style={{

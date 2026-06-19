@@ -83,9 +83,17 @@ export default function GuardianHero({ apiUrl }: { apiUrl: string }) {
               <div style={{fontSize:10,color:"#6B6B80",marginTop:3,letterSpacing:".06em",textTransform:"uppercase" as const}}>{l}</div>
             </div>
           )) : (
-            <div style={{background:"rgba(139,124,255,.06)",border:"1px solid rgba(139,124,255,.15)",borderRadius:10,padding:"14px 28px",textAlign:"center"}}>
-              <div className="serif" style={{fontSize:18,fontStyle:"italic",color:"#C0C0D0",marginBottom:4}}>"Be among the founding writers."</div>
-              <div style={{fontSize:11,color:"#6B6B80"}}>The vault is open. You can be first.</div>
+            <div style={{background:"linear-gradient(135deg,rgba(196,168,74,.08),rgba(139,124,255,.06))",border:"1px solid rgba(196,168,74,.22)",borderRadius:12,padding:"18px 28px",textAlign:"center",maxWidth:380}}>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:8,marginBottom:8}}>
+                <span style={{fontSize:18}}>🕯️</span>
+                <span style={{fontSize:10,color:"#C4A84A",fontWeight:600,letterSpacing:".1em",textTransform:"uppercase" as const}}>Founding Writer</span>
+              </div>
+              <div className="serif" style={{fontSize:22,fontStyle:"italic",color:"#E8D8B0",marginBottom:6}}>
+                You'd be writer #{stats.users + 1}
+              </div>
+              <div style={{fontSize:11.5,color:"#8888A8",lineHeight:1.5}}>
+                The first 1,000 writers earn the Founding Writer badge forever. This is page one.
+              </div>
             </div>
           )}
         </div>

@@ -80,6 +80,27 @@ export default function HomePage() {
           </motion.div>
         ) : null}
 
+        {!loading && (!user?.plan || user.plan === "free") && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            style={{ background: "linear-gradient(135deg,rgba(196,168,74,.1),rgba(139,124,255,.06))", border: "1px solid rgba(196,168,74,.25)", borderRadius: 14, padding: "16px 18px", marginBottom: 24, display: "flex", alignItems: "center", gap: 14 }}
+          >
+            <div style={{ fontSize: 24, flexShrink: 0 }}>✨</div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: 13, fontWeight: 500, color: "#F0F0FA", marginBottom: 2 }}>
+                {caps.length}/3 capsules used on Free
+              </div>
+              <div style={{ fontSize: 11.5, color: "#8888A8" }}>
+                Grey Plus unlocks 25 capsules + the Guardian archive
+              </div>
+            </div>
+            <Link href="/upgrade/" className="tap-shrink" style={{ background: "linear-gradient(135deg,#C4A84A,#A8893A)", borderRadius: 8, padding: "8px 14px", color: "#fff", fontSize: 12, fontWeight: 500, textDecoration: "none", flexShrink: 0, whiteSpace: "nowrap" }}>
+              Upgrade
+            </Link>
+          </motion.div>
+        )}
+
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 24 }}>
           <Link href="/capsule/new/" className="tap-shrink" style={{ background: "linear-gradient(135deg,#8B7CFF,#5A4FCC)", borderRadius: 12, padding: "18px 20px", textDecoration: "none", display: "block" }}>
             <div style={{ fontSize: 20, marginBottom: 8 }}>🔒</div>

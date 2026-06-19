@@ -65,18 +65,21 @@ export default function LandingPage() {
         <div style={{ textAlign: "center", marginBottom: 20 }}>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
             <div style={{ height: 1, width: 36, background: "rgba(196,168,74,.4)" }} />
-            <span style={{ fontSize: 10, color: "#C4A84A", letterSpacing: ".14em", textTransform: "uppercase" }}>Live Vault</span>
+            <span style={{ fontSize: 10, color: "#C4A84A", letterSpacing: ".14em", textTransform: "uppercase" }}>How It Feels</span>
             <div style={{ height: 1, width: 36, background: "rgba(196,168,74,.4)" }} />
           </div>
           <h2 className="serif" style={{ fontSize: "clamp(26px,4vw,40px)", fontWeight: 400, letterSpacing: "-.02em", marginBottom: 10 }}>Every story waits in the dark.</h2>
-          <p style={{ fontSize: 14, color: "#7B7B8F", maxWidth: 400, margin: "0 auto" }}>Some 3 days away. Some 201 days away. All of them are true.</p>
+          <p style={{ fontSize: 14, color: "#7B7B8F", maxWidth: 400, margin: "0 auto" }}>Some sealed for 3 days. Some for 201. This is what your vault will look like.</p>
         </div>
         <CapsuleVaultSection />
         <p className="serif" style={{ textAlign: "center", fontSize: 17, color: "#7B7B8F", fontStyle: "italic", marginTop: 16 }}>"Every story waits for its ending."</p>
       </section>
 
       <section style={{ padding: "72px 24px", maxWidth: 860, margin: "0 auto" }}>
-        <h2 className="serif" style={{ fontSize: "clamp(24px,3.5vw,38px)", fontWeight: 400, letterSpacing: "-.02em", textAlign: "center", marginBottom: 40 }}>Stories sealed right now.</h2>
+        <div style={{ textAlign: "center", marginBottom: 12 }}>
+          <span style={{ fontSize: 9, color: "#6B6B80", background: "#141417", border: "1px solid rgba(139,124,255,.12)", borderRadius: 20, padding: "3px 11px", letterSpacing: ".06em", textTransform: "uppercase" }}>Illustrative example</span>
+        </div>
+        <h2 className="serif" style={{ fontSize: "clamp(24px,3.5vw,38px)", fontWeight: 400, letterSpacing: "-.02em", textAlign: "center", marginBottom: 40 }}>What a sealed story looks like.</h2>
         <div className="sample-cards-grid">
           {SAMPLE.map((c, i) => (
             <div key={i} style={{ background: "#141417", border: "1px solid " + (c.r ? "rgba(196,168,74,.28)" : "rgba(139,124,255,.2)"), borderRadius: 14, padding: 22, animation: (c.r ? "gg" : "gs") + " 4s ease-in-out infinite" }}>
@@ -281,7 +284,11 @@ export default function LandingPage() {
       <footer style={{ padding: "24px 28px", borderTop: "1px solid rgba(139,124,255,.06)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
         <div className="serif" style={{ fontSize: 15, fontStyle: "italic" }}>The Grey Diary</div>
         <div style={{ fontSize: 11, color: "#6B6B80" }}>thegreydiary.online · Where stories wait for their endings</div>
-        <div style={{ fontSize: 11, color: "#6B6B80" }}>Built by Shiladitya Mallick</div>
+        <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+          <a href="/privacy/" style={{ fontSize: 11, color: "#6B6B80", textDecoration: "none" }}>Privacy</a>
+          <a href="/terms/" style={{ fontSize: 11, color: "#6B6B80", textDecoration: "none" }}>Terms</a>
+          <span style={{ fontSize: 11, color: "#6B6B80" }}>Built by Shiladitya Mallick</span>
+        </div>
       </footer>
     </div>
   )
