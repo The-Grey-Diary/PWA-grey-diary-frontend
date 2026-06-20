@@ -1,14 +1,16 @@
 "use client"
 import { motion } from "framer-motion"
 import DesktopNav from "./DesktopNav"
+import MobileHeader from "./MobileHeader"
 import BottomNav from "./BottomNav"
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="app-shell">
       <DesktopNav />
+      <MobileHeader />
       <motion.div
-        className="app-content app-content-desktop-pad"
+        className="app-content app-content-top-pad"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}

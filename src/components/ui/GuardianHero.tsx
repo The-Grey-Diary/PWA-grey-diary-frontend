@@ -3,6 +3,9 @@ import { useEffect, useRef, useState } from "react"
 
 const FALLBACK = "This week, 417 stories were entrusted to time.\n\n63 returned with answers.\n\nMost fears never arrived as imagined.\n\nThe Grey Diary holds what you cannot carry alone."
 
+// Adjust this to your actual public launch date — powers the "Day N" badge
+const LAUNCH_DATE = new Date("2026-06-15T00:00:00+05:30")
+
 export default function GuardianHero({ apiUrl }: { apiUrl: string }) {
   const [text, setText] = useState("")
   const [typing, setTyping] = useState(true)
@@ -27,7 +30,11 @@ export default function GuardianHero({ apiUrl }: { apiUrl: string }) {
     })
   },[apiUrl])
 
-  const hasCounts = stats.sealed>0||stats.users>0
+  // Real-numbers grid only appears once there's genuine activity to show —
+  // gating on signups alone (which hits 1 the instant anyone tests it)
+  // produced an embarrassing "0 Sealed · 0 Revealed · 1 Writers" row.
+  const hasCounts = stats.sealed >= 10
+  const daysSinceLaunch = Math.max(1, Math.ceil((Date.now() - LAUNCH_DATE.getTime()) / 86400000))
 
   return (
     <section style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",textAlign:"center",padding:"80px 24px 60px",position:"relative",overflow:"hidden"}}>
@@ -91,8 +98,12 @@ export default function GuardianHero({ apiUrl }: { apiUrl: string }) {
               <div className="serif" style={{fontSize:22,fontStyle:"italic",color:"#E8D8B0",marginBottom:6}}>
                 You'd be writer #{stats.users + 1}
               </div>
-              <div style={{fontSize:11.5,color:"#8888A8",lineHeight:1.5}}>
+              <div style={{fontSize:11.5,color:"#8888A8",lineHeight:1.5,marginBottom:10}}>
                 The first 1,000 writers earn the Founding Writer badge forever. This is page one.
+              </div>
+              <div style={{display:"inline-flex",alignItems:"center",gap:6,background:"rgba(139,124,255,.08)",border:"1px solid rgba(139,124,255,.18)",borderRadius:20,padding:"3px 11px"}}>
+                <div style={{width:5,height:5,background:"#52C4A0",borderRadius:"50%",animation:"pulse 2s ease-in-out infinite"}}/>
+                <span style={{fontSize:9.5,color:"#9595B5"}}>Day {daysSinceLaunch} · Built in public, solo</span>
               </div>
             </div>
           )}

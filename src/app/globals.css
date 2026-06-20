@@ -29,12 +29,14 @@ img { -webkit-user-drag: none; }
 /* ── App shell layout (mobile-first) ── */
 .app-shell{min-height:100vh;background:#0B0B0D;color:#F5F5F5;font-family:"Inter",system-ui,sans-serif}
 .app-content{padding-bottom:calc(78px + env(safe-area-inset-bottom))}
-.app-content-desktop-pad{padding-top:60px}
+.app-content-top-pad{padding-top:calc(56px + env(safe-area-inset-top))}
 
-.bottom-nav-wrap{display:block}
+.bottom-nav-wrap{display:flex}
+.mobile-header-wrap{display:flex}
 .desktop-nav-wrap{display:none}
 @media (min-width:880px){
   .bottom-nav-wrap{display:none}
+  .mobile-header-wrap{display:none}
   .desktop-nav-wrap{display:flex}
   .app-content{padding-bottom:0}
 }

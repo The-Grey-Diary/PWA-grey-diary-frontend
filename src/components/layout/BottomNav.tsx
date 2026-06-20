@@ -15,7 +15,7 @@ export default function BottomNav() {
 
   return (
     <nav
-      className="bottom-nav"
+      className="bottom-nav-wrap"
       style={{
         position: "fixed",
         bottom: 0,
@@ -25,7 +25,6 @@ export default function BottomNav() {
         background: "rgba(15,15,20,.92)",
         backdropFilter: "blur(24px)",
         borderTop: "1px solid rgba(139,124,255,.12)",
-        display: "flex",
         justifyContent: "space-around",
         alignItems: "center",
         padding: "8px 6px",
