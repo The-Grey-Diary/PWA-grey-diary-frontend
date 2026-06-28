@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next"
+import Script from "next/script"
 import "./globals.css"
 import ServiceWorkerRegister from "@/components/layout/ServiceWorkerRegister"
 
@@ -35,9 +36,39 @@ export const viewport: Viewport = {
   themeColor: "#0B0B0D",
 }
 
+// ── Analytics
+// Plausible: privacy-first, no cookie banner, GDPR compliant, no data sold.
+// Replace YOUR_PLAUSIBLE_DOMAIN with "thegreydiary.online" once you create
+// a free account at plausible.io (or self-host).
+// GA4: also included — replace G-XXXXXXXXXX with your real Measurement ID
+// from Google Analytics → Admin → Data Streams → Measurement ID.
+const PLAUSIBLE_DOMAIN = "thegreydiary.online"
+const GA4_ID = process.env.NEXT_PUBLIC_GA4_ID || ""
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      <head>
+        {/* Plausible — lightweight, privacy-first, no cookie banner */}
+        <Script
+          defer
+          data-domain={PLAUSIBLE_DOMAIN}
+          src="https://plausible.io/js/script.js"
+          strategy="afterInteractive"
+        />
+        {/* GA4 — only loads if you add NEXT_PUBLIC_GA4_ID to Cloudflare env vars */}
+        {GA4_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA4_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="ga4-init" strategy="afterInteractive">
+              {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${GA4_ID}',{page_path:window.location.pathname});`}
+            </Script>
+          </>
+        )}
+      </head>
       <body>
         {children}
         <ServiceWorkerRegister />
